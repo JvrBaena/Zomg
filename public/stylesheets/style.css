@@ -1,0 +1,8 @@
+body {
+  padding-top: 60px;
+  padding-bottom: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#map label { width: auto; display:inline; }
+#map img { max-height: none; max-width: none; }

@@ -7,4 +7,4 @@ Zomg! is an example of using Node.js & Socket.io for creating realtime web appli
 Zomg! uses bootstrap, google maps, and socket.io
 
 With zomg! you can place markers on a map to display the current position for zombies, survivors, food, or weapons in a
-post-apocalyptic worl! :D
+post-apocalyptic world! :D

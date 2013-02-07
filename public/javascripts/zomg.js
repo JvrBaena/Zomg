@@ -1,6 +1,6 @@
 var zomg = zomg || {};
 
-zomg.geo = function(zomg) {
+zomg.geo = function(z) {
   var map = null,
       you = null;
 
@@ -9,14 +9,14 @@ zomg.geo = function(zomg) {
 
     function locationSuccess(position) {
       var ret = _initMap(mapId, position.coords.latitude, position.coords.longitude, socket);
-      zomg.geo.map = ret.map;
-      zomg.geo.you = ret.you;
+      z.geo.map = ret.map;
+      z.geo.you = ret.you;
     }
 
     function locationFail(error) {
       var ret = _initMap(mapId, undefined, undefined, socket);
-      zomg.geo.map = ret.map;
-      zomg.geo.you = ret.you;
+      z.geo.map = ret.map;
+      z.geo.you = ret.you;
     }
   };
 
@@ -51,16 +51,16 @@ zomg.geo = function(zomg) {
       title: "This is you!",
       draggable: true,
       animation: google.maps.Animation.BOUNCE,
-      icon: new google.maps.MarkerImage('http://localhost:3000/images/survivor.png', null, null, null, new google.maps.Size(50, 50))
+      icon: new google.maps.MarkerImage('../images/survivor.png', null, null, null, new google.maps.Size(50, 50))
     }),
     myId = 'marker' + Date.now();
-    
+
     socket.emit('survivor_connected', {type: 'survivor', id: myId, location: {lat: marker.position.lat(), lng: marker.position.lng()}});
 
 
     google.maps.event.addListener(marker, "dragend", function(event) {
       console.log('You have moved');
-      socket.emit('survivor_moved', {id: zomg.geo.you.id, location: {lat: zomg.geo.you.gmarker.position.lat(), lng: zomg.geo.you.gmarker.position.lng()}});
+      socket.emit('survivor_moved', {id: z.geo.you.id, location: {lat: z.geo.you.gmarker.position.lat(), lng: z.geo.you.gmarker.position.lng()}});
     });
 
     google.maps.event.addListener(map, 'click', function(ev) {
@@ -68,7 +68,7 @@ zomg.geo = function(zomg) {
           newMarker = createMarker(selected.toLowerCase(), ev.latLng.lat(), ev.latLng.lng(), map),
           mId = 'marker' + Date.now();
 
-      markers[mId] = new zomg.Marker(mId, newMarker);
+      markers[mId] = new z.Marker(mId, newMarker);
       socket.emit('marker_created', {type: selected.toLowerCase(), id: mId, location: {lat: newMarker.position.lat(), lng: newMarker.position.lng()}});
     });
 
@@ -80,9 +80,9 @@ zomg.geo = function(zomg) {
           map: map,
           title: 'Human survivor!',
           draggable: false,
-          icon: new google.maps.MarkerImage('http://localhost:3000/images/survivor.png', null, null, null, new google.maps.Size(50, 50))
+          icon: new google.maps.MarkerImage('../images/survivor.png', null, null, null, new google.maps.Size(50, 50))
         });
-        markers[key] = new zomg.Marker(key, s);
+        markers[key] = new z.Marker(key, s);
       });
 
       Object.keys(data.zombies).forEach(function(key) {
@@ -91,9 +91,9 @@ zomg.geo = function(zomg) {
           map: map,
           title: 'OMGZOMBIE!',
           draggable: false,
-          icon: new google.maps.MarkerImage('http://localhost:3000/images/zombie.png', null, null, null, new google.maps.Size(50, 50))
+          icon: new google.maps.MarkerImage('../images/zombie.png', null, null, null, new google.maps.Size(50, 50))
         });
-        markers[key] = new zomg.Marker(key, s);
+        markers[key] = new z.Marker(key, s);
       });
 
       Object.keys(data.weapons).forEach(function(key) {
@@ -102,9 +102,9 @@ zomg.geo = function(zomg) {
           map: map,
           title: 'Weapons!',
           draggable: false,
-          icon: new google.maps.MarkerImage('http://localhost:3000/images/shell.png', null, null, null, new google.maps.Size(50, 50))
+          icon: new google.maps.MarkerImage('../images/shell.png', null, null, null, new google.maps.Size(50, 50))
         });
-        markers[key] = new zomg.Marker(key, s);
+        markers[key] = new z.Marker(key, s);
       });
 
       Object.keys(data.foods).forEach(function(key) {
@@ -113,16 +113,16 @@ zomg.geo = function(zomg) {
           map: map,
           title: 'Fresh food!',
           draggable: false,
-          icon: new google.maps.MarkerImage('http://localhost:3000/images/cake.png', null, null, null, new google.maps.Size(50, 50))
+          icon: new google.maps.MarkerImage('../images/cake.png', null, null, null, new google.maps.Size(50, 50))
         });
-        markers[key] = new zomg.Marker(key, s);
+        markers[key] = new z.Marker(key, s);
       });
     });
 
     socket.on('marker_created', function(data) {
       var newMarker = createMarker(data.type, data.location.lat, data.location.lng, map);
 
-      markers[data.id] = new zomg.Marker(data.id, newMarker);
+      markers[data.id] = new z.Marker(data.id, newMarker);
       console.log(markers);
     });
 
@@ -132,23 +132,23 @@ zomg.geo = function(zomg) {
       markers[data.id].gmarker.setPosition(new google.maps.LatLng(data.location.lat, data.location.lng));
     });
 
-    return {map: map, you: new zomg.Marker(myId, marker)};
+    return {map: map, you: new z.Marker(myId, marker)};
   }
 
   var createMarker = function(type, lat, lng, map) {
     var icon = null;
     switch(type) {
       case 'survivor':
-        icon = new google.maps.MarkerImage('http://localhost:3000/images/survivor.png', null, null, null, new google.maps.Size(50, 50));
+        icon = new google.maps.MarkerImage('../images/survivor.png', null, null, null, new google.maps.Size(50, 50));
         break;
       case 'zombie':
-        icon = new google.maps.MarkerImage('http://localhost:3000/images/zombie.png', null, null, null, new google.maps.Size(50, 50));
+        icon = new google.maps.MarkerImage('../images/zombie.png', null, null, null, new google.maps.Size(50, 50));
         break;
       case 'weapon':
-        icon = new google.maps.MarkerImage('http://localhost:3000/images/shell.png', null, null, null, new google.maps.Size(50, 50))
+        icon = new google.maps.MarkerImage('../images/shell.png', null, null, null, new google.maps.Size(50, 50))
         break;
       case 'food':
-        icon = new google.maps.MarkerImage('http://localhost:3000/images/cake.png', null, null, null, new google.maps.Size(50, 50));
+        icon = new google.maps.MarkerImage('../images/cake.png', null, null, null, new google.maps.Size(50, 50));
         break;
     };
     return newMarker = new google.maps.Marker({

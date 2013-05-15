@@ -37,8 +37,6 @@ var events = function(app){
           foods[data.id] = {location: data.location};
           break;
       }
-      console.log("!!!!!!");
-      console.log(data);
       socket.broadcast.emit('marker_created', data);
     });
 
